@@ -55,7 +55,7 @@ const config = {
         endTime: "17:30",
         location: "Grand Ballroom, Hotel Majesty",
         address: "Jl. Jend. Sudirman No.1, Jakarta",
-      }
+      },
       // You can add more agenda items with the same format
     ],
 
@@ -68,7 +68,7 @@ const config = {
       // Whether music plays automatically when website opens
       autoplay: true,
       // Whether music repeats continuously
-      loop: true
+      loop: true,
     },
 
     // List of bank accounts for digital envelope/gifts
@@ -85,10 +85,10 @@ const config = {
         bank: "Bank Mandiri",
         accountNumber: "0987654321",
         accountName: "FULANA",
-      }
+      },
       // You can add more banks with the same format
-    ]
-  }
+    ],
+  },
 };
 
 export default config;
