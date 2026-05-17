@@ -43,6 +43,11 @@
     "test:coverage": "vitest run --coverage",
     "prepare": "husky"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "bun run lint && bun run format:check && bun run test:coverage && bun run build"
+    }
+  },
   "dependencies": {
     "@hono/node-server": "^1.8.0",
     "@hono/zod-validator": "^0.7.6",
@@ -90,7 +95,8 @@
   "lint-staged": {
     "*.{js,jsx}": [
       "eslint --fix",
-      "prettier --write"
+      "prettier --write",
+      "vitest related --run"
     ],
     "*.{json,css,md}": [
       "prettier --write"
