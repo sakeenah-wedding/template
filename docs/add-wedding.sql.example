@@ -1,0 +1,91 @@
+-- =============================================================================
+-- Example: Adding a New Wedding to Sakeenah
+-- =============================================================================
+-- This file shows how to add a new wedding couple to your database.
+-- Simply copy this template, modify the values, and run it in your PostgreSQL database.
+--
+-- How to run this file:
+--   psql -d sakeenah -f add-wedding-example.sql
+--   OR copy and paste into your database client (pgAdmin, DBeaver, etc.)
+-- =============================================================================
+
+BEGIN;
+
+-- Step 1: Insert main invitation details
+INSERT INTO invitations (
+    uid,
+    title,
+    description,
+    groom_name,
+    bride_name,
+    parent_groom,
+    parent_bride,
+    wedding_date,
+    time,
+    location,
+    address,
+    maps_url,
+    maps_embed,
+    og_image,
+    favicon,
+    audio
+) VALUES (
+    'ahmad-fatimah-2025',                                           -- UID: Unique identifier (use in URL as ?uid=ahmad-fatimah-2025)
+    'Pernikahan Ahmad & Fatimah',                                   -- Title
+    'Kami akan menikah dan mengundang Anda untuk turut merayakan momen istimewa ini.', -- Description
+    'Ahmad bin Abdullah',                                            -- Groom's name
+    'Fatimah binti Ibrahim',                                        -- Bride's name
+    'Bapak Abdullah & Ibu Khadijah',                               -- Groom's parents
+    'Bapak Ibrahim & Ibu Maryam',                                  -- Bride's parents
+    '2025-06-15',                                                   -- Wedding date (YYYY-MM-DD)
+    '09:00 - 12:00 WIB',                                           -- Time range
+    'Masjid Al-Ikhlas',                                            -- Venue name
+    'Jl. Raya Bogor No. 123, Jakarta Timur',                      -- Full address
+    'https://goo.gl/maps/example123',                              -- Google Maps short link
+    'https://www.google.com/maps/embed?pb=!1m18...',              -- Google Maps embed URL (get from Maps → Share → Embed)
+    '/images/og-image.jpg',                                        -- Social media preview image
+    '/images/favicon.ico',                                         -- Favicon
+    '{"src": "/audio/fulfilling-humming.mp3", "title": "Fulfilling Humming", "autoplay": true, "loop": true}'::jsonb -- Audio settings
+);
+
+-- Step 2: Insert event agenda (can have multiple events: Akad, Resepsi, etc.)
+INSERT INTO agenda (invitation_uid, title, date, start_time, end_time, location, address, order_index) VALUES
+('ahmad-fatimah-2025', 'Akad Nikah', '2025-06-15', '09:00', '10:30', 'Masjid Al-Ikhlas', 'Jl. Raya Bogor No. 123, Jakarta Timur', 1),
+('ahmad-fatimah-2025', 'Resepsi Nikah', '2025-06-15', '11:00', '14:00', 'Grand Ballroom Hotel Majesty', 'Jl. Sudirman No. 45, Jakarta Pusat', 2);
+
+-- Step 3: Insert bank accounts for digital envelope (can have multiple banks)
+INSERT INTO banks (invitation_uid, bank, account_number, account_name, order_index) VALUES
+('ahmad-fatimah-2025', 'Bank Central Asia', '1234567890', 'AHMAD BIN ABDULLAH', 1),
+('ahmad-fatimah-2025', 'Bank Syariah Indonesia', '0987654321', 'FATIMAH BINTI IBRAHIM', 2);
+
+COMMIT;
+
+-- =============================================================================
+-- Now you can access this wedding at:
+-- http://localhost:5173/?uid=ahmad-fatimah-2025
+-- =============================================================================
+
+
+-- =============================================================================
+-- TEMPLATE FOR QUICK COPY-PASTE
+-- =============================================================================
+-- Just replace the values below and run it!
+-- =============================================================================
+/*
+
+BEGIN;
+
+INSERT INTO invitations (uid, title, description, groom_name, bride_name, parent_groom, parent_bride, wedding_date, time, location, address, maps_url, maps_embed, og_image, favicon) VALUES
+('CHANGE-ME-2025', 'Pernikahan X & Y', 'Your description here', 'Groom Name', 'Bride Name', 'Groom Parents', 'Bride Parents', '2025-12-31', '09:00 - 12:00 WIB', 'Venue Name', 'Full Address', 'https://goo.gl/maps/...', 'https://www.google.com/maps/embed?pb=...', '/images/og-image.jpg', '/images/favicon.ico');
+
+INSERT INTO agenda (invitation_uid, title, date, start_time, end_time, location, address, order_index) VALUES
+('CHANGE-ME-2025', 'Akad Nikah', '2025-12-31', '09:00', '10:30', 'Venue 1', 'Address 1', 1),
+('CHANGE-ME-2025', 'Resepsi', '2025-12-31', '11:00', '14:00', 'Venue 2', 'Address 2', 2);
+
+INSERT INTO banks (invitation_uid, bank, account_number, account_name, order_index) VALUES
+('CHANGE-ME-2025', 'Bank Name 1', '1234567890', 'ACCOUNT NAME 1', 1),
+('CHANGE-ME-2025', 'Bank Name 2', '0987654321', 'ACCOUNT NAME 2', 2);
+
+COMMIT;
+
+*/
