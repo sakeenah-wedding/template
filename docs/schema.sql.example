@@ -1,0 +1,94 @@
+-- Invitations table (each wedding pair with full details)
+CREATE TABLE invitations (
+    id SERIAL PRIMARY KEY,
+    uid VARCHAR(50) UNIQUE NOT NULL,
+
+    -- Couple information
+    title VARCHAR(500) NOT NULL,
+    description TEXT,
+    groom_name VARCHAR(100) NOT NULL,
+    bride_name VARCHAR(100) NOT NULL,
+    parent_groom VARCHAR(255),
+    parent_bride VARCHAR(255),
+
+    -- Main event details
+    wedding_date DATE NOT NULL,
+    time VARCHAR(100),
+    location VARCHAR(500),
+    address TEXT,
+
+    -- Maps
+    maps_url TEXT,
+    maps_embed TEXT,
+
+    -- Media
+    og_image VARCHAR(500) DEFAULT '/images/og-image.jpg',
+    favicon VARCHAR(500) DEFAULT '/images/favicon.ico',
+
+    -- Audio settings (stored as JSON)
+    audio JSONB DEFAULT '{"src": "/audio/fulfilling-humming.mp3", "title": "Fulfilling Humming", "autoplay": true, "loop": true}'::jsonb,
+
+    -- Metadata
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Wishes table
+CREATE TABLE wishes (
+    id SERIAL PRIMARY KEY,
+    invitation_uid VARCHAR(50) NOT NULL REFERENCES invitations(uid) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    message TEXT NOT NULL,
+    attendance VARCHAR(20) DEFAULT 'MAYBE' CHECK (attendance IN ('ATTENDING', 'NOT_ATTENDING', 'MAYBE')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Unique constraint: one wish per guest name per invitation
+    CONSTRAINT unique_wish_per_guest UNIQUE (invitation_uid, name)
+);
+
+-- Agenda table (multiple events per wedding: Akad, Resepsi, etc.)
+CREATE TABLE agenda (
+    id SERIAL PRIMARY KEY,
+    invitation_uid VARCHAR(50) NOT NULL REFERENCES invitations(uid) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
+    start_time TIME,
+    end_time TIME,
+    location VARCHAR(500),
+    address TEXT,
+    order_index INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Banks table (digital envelope accounts)
+CREATE TABLE banks (
+    id SERIAL PRIMARY KEY,
+    invitation_uid VARCHAR(50) NOT NULL REFERENCES invitations(uid) ON DELETE CASCADE,
+    bank VARCHAR(255) NOT NULL,
+    account_number VARCHAR(100) NOT NULL,
+    account_name VARCHAR(255) NOT NULL,
+    order_index INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for faster queries
+CREATE INDEX idx_wishes_invitation_uid ON wishes(invitation_uid);
+CREATE INDEX idx_wishes_created_at ON wishes(created_at DESC);
+CREATE INDEX idx_agenda_invitation_uid ON agenda(invitation_uid);
+CREATE INDEX idx_agenda_order ON agenda(invitation_uid, order_index);
+CREATE INDEX idx_banks_invitation_uid ON banks(invitation_uid);
+CREATE INDEX idx_banks_order ON banks(invitation_uid, order_index);
+
+-- Trigger to auto-update updated_at
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_invitations_updated_at
+    BEFORE UPDATE ON invitations
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
