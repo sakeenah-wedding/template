@@ -12,11 +12,11 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { zValidator } from "@hono/zod-validator";
 
-// Feature routes
-import { invitationRoutes } from "./features/invitation/index.js";
-import { wishesRoutes } from "./features/wishes/index.js";
-import { uidParamSchema } from "./schemas.js";
+// Feature routes and schemas
+import { invitationRoutes, wishesRoutes } from "./features/index.js";
+import { uidParamSchema } from "./features/invitation/invitation.schema.js";
 import { getDbClient } from "./lib/db-client.js";
+import { AppError } from "./lib/errors.js";
 
 // Create main app and API sub-app
 const app = new Hono();
@@ -32,6 +32,43 @@ app.use(
     allowMethods: ["GET", "POST", "PUT", "DELETE"],
   }),
 );
+
+// ============ Global Error Handler ============
+
+app.onError((err, c) => {
+  console.error(`[Error] ${err.name}: ${err.message}`);
+
+  if (err instanceof AppError) {
+    return c.json(
+      {
+        success: false,
+        error: err.message,
+        code: err.code,
+      },
+      err.status,
+    );
+  }
+
+  // Handle Zod validation errors from zValidator
+  if (err.name === "ZodError") {
+    return c.json(
+      {
+        success: false,
+        error: "Validation failed",
+        details: err.errors,
+      },
+      400,
+    );
+  }
+
+  return c.json(
+    {
+      success: false,
+      error: "Internal server error",
+    },
+    500,
+  );
+});
 
 // ============ Mount Feature Routes ============
 
@@ -61,7 +98,7 @@ api.get("/:uid/stats", zValidator("param", uidParamSchema), async (c) => {
     return c.json({ success: true, data: result.rows[0] });
   } catch (error) {
     console.error("Error fetching stats:", error);
-    return c.json({ success: false, error: "Internal server error" }, 500);
+    throw new Error("Internal server error");
   }
 });
 
