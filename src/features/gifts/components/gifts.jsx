@@ -2,11 +2,15 @@ import { useConfig } from "@/features/invitation/hooks/use-config";
 import { motion } from "framer-motion";
 import { Copy, Gift, CheckCircle, Wallet, Building2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useMotionPreset, staggerContainer } from "@/lib/motion";
 
 export default function Gifts() {
   const config = useConfig(); // Use hook to get config from API or fallback to static
   const [copiedAccount, setCopiedAccount] = useState(null);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const fade = useMotionPreset("fade");
+  const fadeUp = useMotionPreset("fadeUp");
+  const scaleIn = useMotionPreset("scaleIn");
 
   // Set animation to run once on component mount
   useEffect(() => {
@@ -30,24 +34,20 @@ export default function Gifts() {
         <div className="container mx-auto px-4 py-20 relative z-10">
           {/* Section Header */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={hasAnimated ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
+            variants={staggerContainer()}
+            initial="hidden"
+            animate={hasAnimated ? "visible" : "hidden"}
             className="text-center space-y-4 mb-16"
           >
             <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              animate={hasAnimated ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2 }}
+              variants={fadeUp}
               className="inline-block text-rose-500 font-medium"
             >
               Hadiah Pernikahan
             </motion.span>
 
             <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={hasAnimated ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.3 }}
+              variants={fadeUp}
               className="text-4xl md:text-5xl font-serif text-gray-800"
             >
               Berikan Hadiah
@@ -55,9 +55,7 @@ export default function Gifts() {
 
             {/* Decorative Divider */}
             <motion.div
-              initial={{ scale: 0 }}
-              animate={hasAnimated ? { scale: 1 } : {}}
-              transition={{ delay: 0.4 }}
+              variants={scaleIn}
               className="flex items-center justify-center gap-4 pt-4"
             >
               <div className="h-[1px] w-12 bg-rose-200" />
@@ -66,12 +64,7 @@ export default function Gifts() {
             </motion.div>
 
             {/* Message Container */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={hasAnimated ? { opacity: 1 } : {}}
-              transition={{ delay: 0.5 }}
-              className="space-y-4 max-w-md mx-auto"
-            >
+            <motion.div variants={fade} className="space-y-4 max-w-md mx-auto">
               {/* Arabic InsyaAllah */}
               <p className="font-arabic text-xl text-gray-800">إن شاء الله</p>
 
@@ -94,9 +87,7 @@ export default function Gifts() {
 
             {/* Optional: Additional Decorative Element */}
             <motion.div
-              initial={{ scale: 0 }}
-              animate={hasAnimated ? { scale: 1 } : {}}
-              transition={{ delay: 0.6 }}
+              variants={scaleIn}
               className="flex items-center justify-center gap-3 pt-4"
             >
               <div className="h-px w-8 bg-rose-200/50" />
@@ -106,13 +97,16 @@ export default function Gifts() {
           </motion.div>
 
           {/* Bank Accounts Grid */}
-          <div className="max-w-2xl mx-auto grid gap-6">
-            {config.banks.map((account, index) => (
+          <motion.div
+            variants={staggerContainer()}
+            initial="hidden"
+            animate={hasAnimated ? "visible" : "hidden"}
+            className="max-w-2xl mx-auto grid gap-6"
+          >
+            {config.banks.map((account) => (
               <motion.div
                 key={account.accountNumber}
-                initial={{ opacity: 0, y: 20 }}
-                animate={hasAnimated ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.2 * index + 0.7 }}
+                variants={fadeUp}
                 className="relative group"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-rose-100/50 to-pink-100/50 rounded-2xl transform transition-transform group-hover:scale-105 duration-300" />
@@ -161,7 +155,7 @@ export default function Gifts() {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
     </>
