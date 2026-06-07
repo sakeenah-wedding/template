@@ -12,23 +12,29 @@ import {
   Calendar as CalendarIcon,
 } from "lucide-react";
 import { formatEventDate } from "@/lib/format-event-date";
+import { useMotionPreset } from "@/lib/motion";
 
 const Modal = ({ isOpen, onClose, children }) => {
+  const fade = useMotionPreset("fade");
+  const fadeUp = useMotionPreset("fadeUp");
+
   return (
     <AnimatePresence>
       {isOpen && (
         <>
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            variants={fade}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             onClick={onClose}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]"
           />
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] w-[90%] max-w-sm"
           >
             <div className="bg-white transform -translate-x-1/2 -translate-y-1/2 rounded-2xl p-6 shadow-2xl border border-gray-100">
@@ -85,6 +91,7 @@ const CalendarButton = ({ icon: Icon, label, onClick, className = "" }) => (
  */
 const SingleEventCard = ({ eventData }) => {
   const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const fadeUp = useMotionPreset("fadeUp");
 
   const googleCalendarLink = () => {
     const startDate = new Date(`${eventData.date}T${eventData.startTime}:00`);
@@ -135,9 +142,9 @@ END:VCALENDAR`;
     <div className="relative">
       <motion.div
         className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
       >
         <div className="flex justify-between items-center">
           <h3 className="text-xl font-semibold text-gray-800">
