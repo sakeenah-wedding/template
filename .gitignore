@@ -16,6 +16,12 @@ dist
 dist-ssr
 *.local
 
+# Test coverage reports (generated)
+coverage
+
+# Serena tool cache
+.serena
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
