@@ -2,9 +2,12 @@ import { useConfig } from "@/features/invitation/hooks/use-config";
 import { Clock, MapPin, CalendarCheck, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatEventDate } from "@/lib/format-event-date";
+import { useMotionPreset, staggerContainer } from "@/lib/motion";
 
 export default function Location() {
   const config = useConfig(); // Use hook to get config from API or fallback to static
+  const fadeUp = useMotionPreset("fadeUp");
+  const scaleIn = useMotionPreset("scaleIn");
 
   return (
     <>
@@ -13,27 +16,21 @@ export default function Location() {
         <div className="container mx-auto px-4 py-20 relative z-10">
           {/* Section Header */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            variants={staggerContainer()}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
             className="text-center space-y-4 mb-16"
           >
             <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              viewport={{ once: true }}
+              variants={fadeUp}
               className="inline-block text-rose-500 font-medium"
             >
               Lokasi Acara
             </motion.span>
 
             <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              viewport={{ once: true }}
+              variants={fadeUp}
               className="text-4xl md:text-5xl font-serif text-gray-800"
             >
               Lokasi
@@ -41,10 +38,7 @@ export default function Location() {
 
             {/* Decorative Divider */}
             <motion.div
-              initial={{ scale: 0 }}
-              whileInView={{ scale: 1 }}
-              transition={{ delay: 0.4 }}
-              viewport={{ once: true }}
+              variants={scaleIn}
               className="flex items-center justify-center gap-4 pt-4"
             >
               <div className="h-[1px] w-12 bg-rose-200" />
@@ -57,9 +51,9 @@ export default function Location() {
           <div className="max-w-6xl mx-auto grid md:grid-row-2 gap-8 items-center">
             {/* Map Container */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true }}
               className="w-full h-[400px] rounded-2xl overflow-hidden shadow-lg border-8 border-white"
             >
@@ -77,9 +71,9 @@ export default function Location() {
 
             {/* Venue Details */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true }}
               className="space-y-6"
             >
