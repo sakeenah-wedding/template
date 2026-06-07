@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useConfig } from "@/features/invitation/hooks/use-config";
+import { DURATION, useReducedMotionFlag } from "@/lib/motion";
 
 const baseMenuItems = [
   { icon: Home, label: "Beranda", href: "#home", id: "home" },
@@ -44,6 +45,7 @@ const baseMenuItems = [
 const BottomBar = () => {
   const config = useConfig();
   const [active, setActive] = React.useState("home");
+  const reduceMotion = useReducedMotionFlag();
 
   // Filter menu items based on config - hide gifts when no banks configured
   const menuItems = useMemo(() => {
@@ -117,9 +119,13 @@ const BottomBar = () => {
     <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center px-4">
       <motion.div
         className="w-auto"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
+        initial={reduceMotion ? { opacity: 0 } : { y: 100, opacity: 0 }}
+        animate={reduceMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
+        transition={
+          reduceMotion
+            ? { duration: DURATION.base }
+            : { duration: DURATION.base, type: "spring", stiffness: 100 }
+        }
       >
         <div className="backdrop-blur-md bg-white/90 border border-gray-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.07)] px-3 py-2">
           <nav className="flex items-center gap-1">
@@ -142,7 +148,7 @@ const BottomBar = () => {
                   animate={{
                     scale: active === item.id ? 1.1 : 1,
                   }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: DURATION.fast }}
                 >
                   <item.icon
                     className={cn(
@@ -163,7 +169,7 @@ const BottomBar = () => {
                   animate={{
                     scale: active === item.id ? 1.05 : 1,
                   }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: DURATION.fast }}
                 >
                   {item.label}
                 </motion.span>
