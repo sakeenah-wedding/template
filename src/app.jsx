@@ -22,6 +22,7 @@ import { useInvitation } from "@/features/invitation";
 import { useAudio } from "@/hooks/use-audio";
 import staticConfig from "@/config/config";
 import { useMotionPreset } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 // Lazy load components for better performance
 const Layout = lazy(() => import("@/components/layout/layout"));
@@ -76,14 +77,18 @@ function App() {
   // Show error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-pink-50">
-        <div className="text-center max-w-md mx-auto p-6">
-          <div className="text-rose-500 text-6xl mb-4">!</div>
-          <h1 className="text-2xl font-serif text-gray-800 mb-2">
+      <div
+        className={cn(
+          "min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-pink-50",
+        )}
+      >
+        <div className={cn("text-center max-w-md mx-auto p-6")}>
+          <div className={cn("text-rose-500 text-6xl mb-4")}>!</div>
+          <h1 className={cn("text-2xl font-serif text-gray-800 mb-2")}>
             Undangan Tidak Ditemukan
           </h1>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <p className="text-sm text-gray-500">
+          <p className={cn("text-gray-600 mb-4")}>{error}</p>
+          <p className={cn("text-sm text-gray-500")}>
             Silakan periksa URL Anda atau hubungi penyelenggara.
           </p>
         </div>
@@ -139,16 +144,20 @@ function App() {
             initial={{ y: 0, opacity: 1 }}
             exit={{ y: "-100%", opacity: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#faf9f7]"
+            className={cn(
+              "fixed inset-0 z-50 flex items-center justify-center bg-[#faf9f7]",
+            )}
             role="status"
             aria-label="Loading invitation"
           >
-            <div className="text-center">
+            <div className={cn("text-center")}>
               <motion.p
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
-                className="font-serif text-xs text-gray-400 tracking-[6px] uppercase"
+                className={cn(
+                  "font-serif text-xs text-gray-400 tracking-[6px] uppercase",
+                )}
               >
                 Preparing
               </motion.p>
@@ -156,7 +165,7 @@ function App() {
                 initial={{ width: 0 }}
                 animate={{ width: 44 }}
                 transition={{ delay: 0.7, duration: 1.2, ease: "easeOut" }}
-                className="h-px bg-rose-600 mx-auto mt-4"
+                className={cn("h-px bg-rose-600 mx-auto mt-4")}
               />
             </div>
           </motion.div>
@@ -166,15 +175,21 @@ function App() {
       <Suspense
         fallback={
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#faf9f7]"
+            className={cn(
+              "fixed inset-0 z-50 flex items-center justify-center bg-[#faf9f7]",
+            )}
             role="status"
             aria-label="Loading"
           >
-            <div className="text-center">
-              <p className="font-serif text-xs text-gray-400 tracking-[6px] uppercase">
+            <div className={cn("text-center")}>
+              <p
+                className={cn(
+                  "font-serif text-xs text-gray-400 tracking-[6px] uppercase",
+                )}
+              >
                 Preparing
               </p>
-              <div className="h-px w-[44px] bg-rose-600 mx-auto mt-4" />
+              <div className={cn("h-px w-[44px] bg-rose-600 mx-auto mt-4")} />
             </div>
           </div>
         }
