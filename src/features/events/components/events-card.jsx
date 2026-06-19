@@ -1,6 +1,7 @@
 // EventCard.jsx
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 import {
   Calendar,
   Clock,
@@ -28,16 +29,22 @@ const Modal = ({ isOpen, onClose, children }) => {
             animate="visible"
             exit="exit"
             onClick={onClose}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]"
+            className={cn("fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]")}
           />
           <motion.div
             variants={fadeUp}
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] w-[90%] max-w-sm"
+            className={cn(
+              "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] w-[90%] max-w-sm",
+            )}
           >
-            <div className="bg-white transform -translate-x-1/2 -translate-y-1/2 rounded-2xl p-6 shadow-2xl border border-gray-100">
+            <div
+              className={cn(
+                "bg-white transform -translate-x-1/2 -translate-y-1/2 rounded-2xl p-6 shadow-2xl border border-gray-100",
+              )}
+            >
               {children}
             </div>
           </motion.div>
@@ -50,12 +57,15 @@ const Modal = ({ isOpen, onClose, children }) => {
 const CalendarButton = ({ icon: Icon, label, onClick, className = "" }) => (
   <motion.button
     onClick={onClick}
-    className={`flex items-center space-x-3 w-full p-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors ${className}`}
+    className={cn(
+      "flex items-center space-x-3 w-full p-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors",
+      className,
+    )}
     whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
   >
-    <Icon className="w-5 h-5" />
-    <span className="text-gray-700 font-medium">{label}</span>
+    <Icon className={cn("w-5 h-5")} />
+    <span className={cn("text-gray-700 font-medium")}>{label}</span>
   </motion.button>
 );
 
@@ -139,40 +149,44 @@ END:VCALENDAR`;
   };
 
   return (
-    <div className="relative">
+    <div className={cn("relative")}>
       <motion.div
-        className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-4"
+        className={cn(
+          "bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-4",
+        )}
         variants={fadeUp}
         initial="hidden"
         animate="visible"
       >
-        <div className="flex justify-between items-center">
-          <h3 className="text-xl font-semibold text-gray-800">
+        <div className={cn("flex justify-between items-center")}>
+          <h3 className={cn("text-xl font-semibold text-gray-800")}>
             {eventData.title.split(" - ")[0]}
           </h3>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="text-rose-500 hover:text-rose-600 transition-colors"
+            className={cn(
+              "text-rose-500 hover:text-rose-600 transition-colors",
+            )}
             onClick={() => setShowCalendarModal(true)}
           >
-            <CalendarPlus className="w-5 h-5" />
+            <CalendarPlus className={cn("w-5 h-5")} />
           </motion.button>
         </div>
-        <div className="space-y-3 text-gray-600">
-          <div className="flex items-center space-x-3">
-            <Calendar className="w-5 h-5 text-rose-500" />
+        <div className={cn("space-y-3 text-gray-600")}>
+          <div className={cn("flex items-center space-x-3")}>
+            <Calendar className={cn("w-5 h-5 text-rose-500")} />
             <span>{formatEventDate(eventData.date)}</span>
           </div>
-          <div className="flex items-center space-x-3">
-            <Clock className="w-5 h-5 text-rose-500" />
+          <div className={cn("flex items-center space-x-3")}>
+            <Clock className={cn("w-5 h-5 text-rose-500")} />
             <span>
               {eventData.startTime?.substring(0, 5) || eventData.startTime} -{" "}
               {eventData.endTime?.substring(0, 5) || eventData.endTime} WIB
             </span>
           </div>
-          <div className="flex items-center space-x-3">
-            <MapPin className="w-5 h-5 text-rose-500" />
+          <div className={cn("flex items-center space-x-3")}>
+            <MapPin className={cn("w-5 h-5 text-rose-500")} />
             <span>{eventData.location}</span>
           </div>
         </div>
@@ -182,25 +196,25 @@ END:VCALENDAR`;
         isOpen={showCalendarModal}
         onClose={() => setShowCalendarModal(false)}
       >
-        <div className="space-y-6 ">
-          <div className="flex justify-between  items-center">
-            <h3 className="text-xl font-semibold text-gray-800">
+        <div className={cn("space-y-6 ")}>
+          <div className={cn("flex justify-between  items-center")}>
+            <h3 className={cn("text-xl font-semibold text-gray-800")}>
               Add to Calendar
             </h3>
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setShowCalendarModal(false)}
-              className="text-gray-500 hover:text-gray-700"
+              className={cn("text-gray-500 hover:text-gray-700")}
             >
-              <X className="w-5 h-5" />
+              <X className={cn("w-5 h-5")} />
             </motion.button>
           </div>
 
-          <div className="space-y-3">
+          <div className={cn("space-y-3")}>
             <CalendarButton
               icon={(props) => (
-                <Chrome {...props} className="w-5 h-5 text-rose-500" />
+                <Chrome {...props} className={cn("w-5 h-5 text-rose-500")} />
               )}
               label="Google Calendar"
               onClick={() => window.open(googleCalendarLink(), "_blank")}
@@ -208,7 +222,7 @@ END:VCALENDAR`;
 
             <CalendarButton
               icon={(props) => (
-                <Apple {...props} className="w-5 h-5 text-gray-900" />
+                <Apple {...props} className={cn("w-5 h-5 text-gray-900")} />
               )}
               label="Apple Calendar"
               onClick={downloadICSFile}
@@ -216,7 +230,10 @@ END:VCALENDAR`;
 
             <CalendarButton
               icon={(props) => (
-                <CalendarIcon {...props} className="w-5 h-5 text-blue-600" />
+                <CalendarIcon
+                  {...props}
+                  className={cn("w-5 h-5 text-blue-600")}
+                />
               )}
               label="Outlook Calendar"
               onClick={downloadICSFile}
@@ -231,7 +248,7 @@ END:VCALENDAR`;
 // Main EventCards component that handles multiple events
 const EventCards = ({ events }) => {
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-4")}>
       {events.map((event, index) => (
         <SingleEventCard key={index} eventData={event} />
       ))}

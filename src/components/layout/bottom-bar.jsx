@@ -116,9 +116,13 @@ const BottomBar = () => {
   }, [menuItems]);
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center px-4">
+    <div
+      className={cn(
+        "fixed bottom-4 left-0 right-0 z-50 flex justify-center px-4",
+      )}
+    >
       <motion.div
-        className="w-auto"
+        className={cn("w-auto")}
         initial={reduceMotion ? { opacity: 0 } : { y: 100, opacity: 0 }}
         animate={reduceMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
         transition={
@@ -127,8 +131,12 @@ const BottomBar = () => {
             : { duration: DURATION.base, type: "spring", stiffness: 100 }
         }
       >
-        <div className="backdrop-blur-md bg-white/90 border border-gray-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.07)] px-3 py-2">
-          <nav className="flex items-center gap-1">
+        <div
+          className={cn(
+            "backdrop-blur-md bg-white/90 border border-gray-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.07)] px-3 py-2",
+          )}
+        >
+          <nav className={cn("flex items-center gap-1")}>
             {menuItems.map((item) => (
               <motion.a
                 key={item.label}
