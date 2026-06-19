@@ -219,9 +219,18 @@ export default function Wishes() {
           {/* Wishes List */}
           <div className="max-w-2xl mx-auto space-y-6">
             {isLoading && (
-              <div className="flex justify-center items-center py-12">
-                <Loader2 className="w-8 h-8 text-rose-500 animate-spin" />
-                <span className="ml-3 text-gray-600">Memuat pesan...</span>
+              <div className="flex items-center justify-center py-12">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: 44 }}
+                  transition={{
+                    duration: 1.2,
+                    ease: "easeOut",
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                  className="h-px bg-rose-600"
+                />
               </div>
             )}
 

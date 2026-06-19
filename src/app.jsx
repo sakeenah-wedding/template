@@ -18,7 +18,6 @@
 import { useState, lazy, Suspense } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { Heart } from "lucide-react";
 import { useInvitation } from "@/features/invitation";
 import { useAudio } from "@/hooks/use-audio";
 import staticConfig from "@/config/config";
@@ -73,21 +72,6 @@ function App() {
     await audioControls.play();
     setIsInvitationOpen(true);
   };
-
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-pink-50">
-        <div className="text-center">
-          <Heart
-            className="h-12 w-12 text-rose-500 mx-auto mb-4 animate-pulse"
-            fill="currentColor"
-          />
-          <p className="text-gray-600">Memuat undangan...</p>
-        </div>
-      </div>
-    );
-  }
 
   // Show error state
   if (error) {
@@ -147,15 +131,50 @@ function App() {
         <meta name="theme-color" content="#FDA4AF" /> {/* Rose-300 color */}
       </Helmet>
 
+      {/* Loading overlay with exit animation */}
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            key="loading-screen"
+            initial={{ y: 0, opacity: 1 }}
+            exit={{ y: "-100%", opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-[#faf9f7]"
+            role="status"
+            aria-label="Loading invitation"
+          >
+            <div className="text-center">
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
+                className="font-serif text-xs text-gray-400 tracking-[6px] uppercase"
+              >
+                Preparing
+              </motion.p>
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: 44 }}
+                transition={{ delay: 0.7, duration: 1.2, ease: "easeOut" }}
+                className="h-px bg-rose-600 mx-auto mt-4"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Suspense
         fallback={
-          <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-pink-50">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-[#faf9f7]"
+            role="status"
+            aria-label="Loading"
+          >
             <div className="text-center">
-              <Heart
-                className="h-12 w-12 text-rose-500 mx-auto mb-4 animate-pulse"
-                fill="currentColor"
-              />
-              <p className="text-gray-600">Memuat...</p>
+              <p className="font-serif text-xs text-gray-400 tracking-[6px] uppercase">
+                Preparing
+              </p>
+              <div className="h-px w-[44px] bg-rose-600 mx-auto mt-4" />
             </div>
           </div>
         }
